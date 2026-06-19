@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="navbar-brand">📚 English Learning Platform</div>
+            <div class="navbar-menu">
+                <button id="navHome" class="nav-btn active" onclick="showPage('home')">Home</button>
+                <button id="navLearn" class="nav-btn" onclick="showPage('learn')">Learn</button>
+                <button id="navQuiz" class="nav-btn" onclick="showPage('quiz')">Quiz</button>
+                <button id="navProgress" class="nav-btn" onclick="showPage('progress')">Progress</button>
+                <button id="navLogout" class="nav-btn logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- 主容器 -->
+        <div class="container">
+            <!-- 登录/注册页面 -->
+            <div id="authPage" class="page active">
+                <div class="auth-container">
+                    <div class="auth-box">
+                        <h1>Welcome to English Learning</h1>
+                        <p>Start learning English today!</p>
+
+                        <!-- 登录表单 -->
+                        <div id="loginForm" class="form-section active">
+                            <h2>Login</h2>
+                            <form onsubmit="handleLogin(event)">
+                                <input type="email" id="loginEmail" placeholder="Email" required>
+                                <input type="password" id="loginPassword" placeholder="Password" required>
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                            <p>Don't have an account? <a href="#" onclick="toggleAuthForm()">Register</a></p>
+                        </div>
+
+                        <!-- 注册表单 -->
+                        <div id="registerForm" class="form-section">
+                            <h2>Register</h2>
+                            <form onsubmit="handleRegister(event)">
+                                <input type="text" id="registerUsername" placeholder="Username" required>
+                                <input type="email" id="registerEmail" placeholder="Email" required>
+                                <input type="password" id="registerPassword" placeholder="Password" required>
+                                <input type="password" id="registerConfirm" placeholder="Confirm Password" required>
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                            <p>Already have an account? <a href="#" onclick="toggleAuthForm()">Login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主页 -->
+            <div id="homePage" class="page">
+                <div class="home-container">
+                    <h1>Welcome to English Learning Platform</h1>
+                    <p id="welcomeMessage" class="welcome-message"></p>
+
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>Words Learned</h3>
+                            <p class="stat-number" id="wordsLearned">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Average Quiz Score</h3>
+                            <p class="stat-number" id="avgScore">0%</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Quizzes Taken</h3>
+                            <p class="stat-number" id="quizzesTaken">0</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-large btn-primary" onclick="showPage('learn')">
+                            📖 Start Learning
+                        </button>
+                        <button class="btn btn-large btn-success" onclick="showPage('quiz')">
+                            🎯 Take a Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习页面 -->
+            <div id="learnPage" class="page">
+                <div class="learn-container">
+                    <h1>Learn English Words</h1>
+
+                    <div class="filters">
+                        <select id="categoryFilter" onchange="filterWords()">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="difficultyFilter" onchange="filterWords()">
+                            <option value="">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <div class="words-grid" id="wordsGrid">
+                        <!-- 单词卡片将在这里插入 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 测验页面 -->
+            <div id="quizPage" class="page">
+                <div class="quiz-container">
+                    <h1>English Quiz</h1>
+
+                    <div id="quizStart" class="quiz-start">
+                        <p>Test your English knowledge!</p>
+                        <label>
+                            Number of questions:
+                            <select id="quizCount">
+                                <option value="5">5 questions</option>
+                                <option value="10" selected>10 questions</option>
+                                <option value="20">20 questions</option>
+                            </select>
+                        </label>
+                        <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
+                    </div>
+
+                    <div id="quizContent" class="quiz-content" style="display: none;">
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <div id="questionContainer" class="question-container">
+                            <!-- 问题将在这里插入 -->
+                        </div>
+                    </div>
+
+                    <div id="quizResults" class="quiz-results" style="display: none;">
+                        <h2>Quiz Complete!</h2>
+                        <div class="results-summary">
+                            <p>Correct: <span id="correctCount">0</span> / <span id="totalCount">0</span></p>
+                            <p>Score: <span id="scoreDisplay">0</span>%</p>
+                            <p>Accuracy: <span id="accuracyDisplay">0</span>%</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="resetQuiz()">Take Another Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 进度页面 -->
+            <div id="progressPage" class="page">
+                <div class="progress-container">
+                    <h1>Your Learning Progress</h1>
+
+                    <div class="progress-stats">
+                        <div class="progress-item">
+                            <h3>Total Words Learned</h3>
+                            <p id="progressWords">0</p>
+                        </div>
+                        <div class="progress-item">
+                            <h3>Learning Rate</h3>
+                            <p id="progressRate">0%</p>
+                        </div>
+                        <div class="progress-item">
+                            <h3>Average Quiz Score</h3>
+                            <p id="progressAvgScore">0%</p>
+                        </div>
+                        <div class="progress-item">
+                            <h3>Total Quizzes</h3>
+                            <p id="progressQuizzesCount">0</p>
+                        </div>
+                    </div>
+
+                    <div class="learned-words">
+                        <h2>Words You've Learned</h2>
+                        <div id="learnedWordsList" class="words-list">
+                            <!-- 已学单词列表将在这里插入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
